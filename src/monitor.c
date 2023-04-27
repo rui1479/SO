@@ -40,6 +40,6 @@ int main() {
     }
 
     close(pipe_fd);
-    unlink("pipe_monitor");
+    unlink("monitor_fifo");
     return 0;
 }

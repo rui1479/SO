@@ -16,13 +16,14 @@ int main(int argc, char *argv[]) {
         perror("Falha ao abrir pipe");
         exit(EXIT_FAILURE);
     }
+
     if (argc < 3) {
         printf("Uso: %s execute -u <programa> [argumentos]\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
     if (strcmp(argv[1], "execute") == 0 && strcmp(argv[2], "-u") == 0) {
-        int pipe_fd = open("pipe_monitor", O_WRONLY);
+        int pipe_fd = open("monitor_fifo", O_WRONLY);
         if (pipe_fd == -1) {
             perror("Falha ao abrir pipe");
             exit(EXIT_FAILURE);
@@ -54,10 +55,14 @@ int main(int argc, char *argv[]) {
             gettimeofday(&end_time, NULL);
 
             long elapsed_time = (end_time.tv_sec - start_time.tv_sec) * 1000000 + (end_time.tv_usec - start_time.tv_usec);
-            int elapsed_time_ms = elapsed_time / 10; // Converter para milissegundos
+            int elapsed_time_ms = elapsed_time / 10;
             printf("Programa executado com sucesso\n");
-            printf("Tempo de execução: %i milissegundos\n", elapsed_time_ms);
+            printf("Tempo de execução: %i ms\n", elapsed_time_ms);
 
+            // Criar a pasta "PIDS-folder" caso não exista
+            mkdir("PIDS-folder", 0777);
+
+            // Salvar informações em um arquivo com o nome do PID do programa na pasta "PIDS-folder"
             char filename[256];
             snprintf(filename, sizeof(filename), "PIDS-folder/%d.txt", pid);
             FILE *file = fopen(filename, "w");
@@ -72,8 +77,6 @@ int main(int argc, char *argv[]) {
             }
             fprintf(file, "\nTempo de execução: %i milissegundos\n", elapsed_time_ms);
             fclose(file);
-
-
             close(pipe_fd);
         }
     } else {
