@@ -1,3 +1,0 @@
-PID do programa: 5924
-Comando usado: ls
-Tempo de execução: 162 milissegundos

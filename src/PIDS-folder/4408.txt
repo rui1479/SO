@@ -1,3 +1,0 @@
-PID do programa: 4408
-Comando usado: ls -l
-Tempo de execução: 237 milissegundos
